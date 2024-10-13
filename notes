@@ -1,0 +1,136 @@
+K 17
+props زي انبوت في الانجولار
+    الكمبوننت اللي طالعة منه هو الاب واللي رايحاله هو الابن نحطه في الابن باسم props.names او {names} distructor
+    وفي الاب يتحط في تاجة <Child names={arr} /> names اللي ع الشمال خاصة بالابن و arr ع اليمين خاصة بالاب
+
+v2
+    event.target.value قيمة العنصر اللي بعمل فيه الايفنت
+        target العنصر اللي بعمل عليه الايفنت
+
+    Handling events
+        لازم اي ايفنت اعمله عشان اخلي الفانكشن بتاعته تتنفذ لما اشغله بحط arrow function و الا هتشتغل اول ما ارن علطول 
+        //<li onClick={getApi()}><h6>Egypt</h6></li> كده هيرن اول ما يشتغل ال render لازم اشيل القوسين
+        //<li onClick={() => getApi('eg')}><h6>Egypt</h6></li> لو الفانكشن بتاحد براميتر بتتحط arrow func
+
+    this في الكلس كمبوننت نعمل اي فانكشن arrow function عشان ال this تعود علي الكلاس ده متطلعش undefined
+        لو معملتش arrow او bind للكلاس هتطلع undefined وهتبقي unbound يعني مش منتمية لكلاس
+    
+    Prevent Default بمنع ال behavior اللي هيعمله الايفنت زي الفورم بتعمل ريفرش في العادي اخليها متعملش ده 
+        onSubmit={(e)=>e.PreventDefault();}
+
+
+v3
+    key لازم نحطه لما نعمل map وعادة بيكون id عشان ميكونش متكرر
+    ? بعمل بيها if condition ممكن لما يعمل ايفنت معين اظهر حاجو والعكس مظهرش اي حاجة لما مظهرش حاجة اكتب null
+    
+
+v4
+    React Hooks 
+    تستخدم في  functional comp بس
+    1- useState تستخدم لعمل state() و setState() بتوع الكلاس كمبوننت في الفانكشنال كمبوننت في خطوة واحدة
+        let [count, setCount] = useState(0);     count =0 initial value  setCount=2 اغير القيمة
+        لو مديناش ل usestate قيمة ابتدائية ترجع undefined
+        لو غيرت ال state بنفس فيمة ال state القديمة مش هيعمل rerender 
+    2- useEffect زي component life cycle بس في الفانكشنال كمبوننت
+        - componentDidMount بهاندل فيها side effect بتشتغل في الكمبوننت بتاعي زي ال data fetching نفس وظيفة 
+            لما تكون ال dependancies list بتاعتها فاضية [] 
+            useEffect(()=>{
+                setCount(count+1);
+            }[]) تتنده مرة واحدة اول ما يبدا الكمبوننت 
+        - componentDidUpdate بتادي وظيفة  لما يكون في dependancies list بحدد فيها ايه اللي يتعمل ابديت
+            useEffect(()=>{ ترن مع بداية الكمبوننت ولما يحصله الابديت اللي بحدده
+                    setCount(count+1);
+                }[count]) عايز اعمل ابديت للكاونت
+        - componentWillUnMount بتادي وظيفتها لما اعمل return function جوا ال useEffect تعمل clean up
+            useEffect(()=>{
+                const interval = setInterval(()=>{ 
+                    console.log("unmounting");
+                },1000)
+                    return () => {
+                        clearInterval(interval) نلغي التايمر لما نخرج من الكمبوننت
+                    }
+                }[])
+        - Default لو كان مفيهاش dependancies بتكون فانكشن بترن كل شوية اول ما الكمبوننت يبتدي ومع كل تغيير بيحصل
+            useEffect(()=>{
+                setCount(count+1);
+            })
+
+Custom Hooks  
+    ممكن اعمل هوك بنفسي ابدا اسمها بكلمة use عبارة عن فانكشن عادية في فايل بعملها ب useEffect وبنده عليها في الكمبوننت 
+    بعمل Custom Hook تجيبلي الداتا
+    import { useState, useEffect } from 'react'; فانكشن ال custom hook
+    const useFetch = (url) => {
+    const [data, setData] = useState(null);
+    useEffect(() => {
+        fetch(url).then(response => {
+            return response.json();
+        })
+        .then(data => {
+            setData(data);
+        })
+    }, [url])
+    return { data };
+    }
+    export default useFetch;
+    const { error, data } = useFetch( استدعي فانكشن ال Hook
+        `https://pokeapi.co/api/v2/pokemon/${count}`
+    );
+
+K57
+XSS ده حماية للداتا اللي بجيبها من api لما اجيبها بتظهر جوا تاجات زي span
+    عشان اخلي الداتا تظهر عادي احط الريسبونس اللي راجع في <p dangerouslySetInnerHTML={{"_html":item.id}}></p>
+
+60
+debounce setTimeOut فترة بين كل ريكويست والتاني 
+    استخدمها في السيرش عشان ميعملش ريكويست ويجيب نتايج لما اكتب كل حرف 
+
+v8
+Drawio; extension 
+property of component زي <Navbar.Img /> كمبوننت باخد منه بروبيرتي زي كزمبوننت اصغر ينتمي للكبير
+State Management 
+    global state نعملها عشان كل الكمبوننت تبعتلها او تاخد منها داتا بدل ما ارفع الداتا لكمبوننت اب من طرقها
+    1- Lifting up & Drilling props طريقة deprecated
+    2- Context api 
+        ممكن اخلي كل الكمبوننت يشوفوها او كمبوننت معينة
+        export const productContext = createContext(defaultValue); نعمل ال context في الفايل بتاعه
+        export default const productsProvider = ( props ) => {
+            const [product, setProduct] = usestate([{id:1,title:"product1"}])
+            return( كود يتكتب جوا فايل ال Context
+                <productContext.Provider value={product}>; ننده ال context جوا الاب ونعمله provide للقيمة اللي عايز اخدها منه واباصيها للكمبوننت تغنيني اني ابعت القيمة دي بروبس في الكمبوننت
+                    {props.children} عشان يعرف الكمبوننت اللي هيشتغل عليها او هيتشاف فيها بعرفها من الاب بتاعه app.js
+                </productContext.Provider>
+            )
+        }
+        <div className="App"> 
+        <productsProvider value={product}>; ننده ال context جوا الاب ونعمله provide للقيمة اللي عايز اخدها منه واباصيها للكمبوننت تغنيني اني ابعت القيمة دي بروبس في الكمبوننت
+            <productListComponent />  بحدد الكمبوننت اللي يشتغل عليها ال context اللي بيتحط مكانها props.children في فايل ال context
+            <productItemComponent />
+        </productsProvider>
+        </div>
+        const theme = useContext(ThemeContext); استخدم ال context جوا الكمبوننت
+
+        <Navbar.toggle /> ننده بيها الفانكشن اللي جوا كمبوننت الناف as property
+
+    3- Recoil liberary تعمل State Management
+        atom زي فايل ال context بالظبط لازم يكون فيه key unique و Providers بحط فيه الداتا اللي هباصيها
+        useRecoilState تخليني استخدم ال atom في الكمبوننت  
+    
+    4- Redux
+        cycle is (Component or UI -> dispatch to Action -> Reducer -> store -> subscribe to Component or UI )
+        لو افترضنا اننا عايزين نسحب فلوس من البنك الفلوس متخزنة في الستور وعشان اسحب عملية السحب هي الاكشن وعشان تتفنذ ينفذها الريديوسر
+        - Store بخزن فيه الداتا اللي هعمل عليها العمليات اللي محتاجها بيبقي shared بين الكمبوننت كلها او اللي احددها
+        - Action الحاجة اللي عايز اعملها او event هو التعديل اللي عايز اعدله في الستور وعشان اعدل لازم استخدم الريديوسر
+        - Reducer فانكشن تاخد ال Action تنفذه يعدل في الستور
+                store.dispatch(action) تنفيذ عملية سحب الفلوس
+        - dispatch فانكشن تدي الريديوسر الامر انه ينفذ الاكشن
+        يحط الداتا في store عشان اكلمها ويغير او يحط فيها داتا اعمل يروح ل action وبعدها Reducer وبعدها store
+        - Subscribe عشان اجيب الداتا من الستور في الكمبوننت
+        - Component or UI عبارة عن اي عنصر عندي في الكمبوننت او الكمبوننت كله
+        const store = Redux.createStore(Reducer) عشان نعرف ستور 
+        const store = Redux.combineReducers(reducer1,reducer2) تخلي الستور ياخد اكتر من reducer
+        store.getState() تجيب الداتا من الستور تقول الحساب في فلوس كام
+
+        Redux thunk تخليني اعمل فيتش للداتا من ال api عشان لو عملت فيتش من غيرها هيعمل ايررور عشان الاكشن و الريديوسر شغالين sync لازم middleware بينهم تخليهم يقبلوا داتا async
+            بتنزل من cdn عبارة عن middleware تخليني اقرا الداتا async قبل ما تروح من ال action لل reducer
+                عشان الاكشن بيكون synchronous
+        npm i react-redux & npm i redux
