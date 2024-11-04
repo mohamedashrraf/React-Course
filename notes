@@ -10,7 +10,8 @@ v2
     Handling events
         لازم اي ايفنت اعمله عشان اخلي الفانكشن بتاعته تتنفذ لما اشغله بحط arrow function و الا هتشتغل اول ما ارن علطول 
         //<li onClick={getApi()}><h6>Egypt</h6></li> كده هيرن اول ما يشتغل ال render لازم اشيل القوسين
-        //<li onClick={() => getApi('eg')}><h6>Egypt</h6></li> لو الفانكشن بتاحد براميتر بتتحط arrow func
+        //<li onClick={() => getApi('eg')}><h6>Egypt</h6></li> لو الفانكشن بتاحد براميتر بتتحط arrow func immediatly invoke
+        //<li onClick={getApi}><h6>Egypt</h6></li> لو الفانكشن ملهاش براميتير مش هباصيلها داتا ينفع احطها كده هترن زي ال arrow لما ادوس
 
     this في الكلس كمبوننت نعمل اي فانكشن arrow function عشان ال this تعود علي الكلاس ده متطلعش undefined
         لو معملتش arrow او bind للكلاس هتطلع undefined وهتبقي unbound يعني مش منتمية لكلاس
@@ -23,7 +24,14 @@ v3
     key لازم نحطه لما نعمل map وعادة بيكون id عشان ميكونش متكرر
     ? بعمل بيها if condition ممكن لما يعمل ايفنت معين اظهر حاجو والعكس مظهرش اي حاجة لما مظهرش حاجة اكتب null
     
-
+21
+    deleteFunction(e, clickIndex){cons del=state.filter((item,index)=>index!==clickIndex); يجيب كل العناصر اللي الاندكس بتاعها مش هو الاندكس اللي دوست عليه
+                                    setState({del}) الداتا بعد التحديث اللي حصل مسح العنصر
+                                 }
+22
+    React بتتعامل مع الفورم بطريقتين control and unControl 
+        1- control تخزن كل الداتا في ال state وتعمل ابديت للفورم عن طريقها
+        2- unControl تخلي DOM هي اللي تتعامل مع الفورم          
 v4
     React Hooks 
     تستخدم في  functional comp بس
@@ -31,6 +39,7 @@ v4
         let [count, setCount] = useState(0);     count =0 initial value  setCount=2 اغير القيمة
         لو مديناش ل usestate قيمة ابتدائية ترجع undefined
         لو غيرت ال state بنفس فيمة ال state القديمة مش هيعمل rerender 
+
     2- useEffect زي component life cycle بس في الفانكشنال كمبوننت
         - componentDidMount بهاندل فيها side effect بتشتغل في الكمبوننت بتاعي زي ال data fetching نفس وظيفة 
             لما تكون ال dependancies list بتاعتها فاضية [] 
@@ -54,6 +63,14 @@ v4
             useEffect(()=>{
                 setCount(count+1);
             })
+
+    3- useCallBack
+
+    4- useRef
+        شبه getElementById بمسك بيها العنصر
+        اول ما السيستم يقوم يعمل focus او blur علي عنصر او انبوت معين 
+
+
 
 Custom Hooks  
     ممكن اعمل هوك بنفسي ابدا اسمها بكلمة use عبارة عن فانكشن عادية في فايل بعملها ب useEffect وبنده عليها في الكمبوننت 
@@ -89,8 +106,8 @@ Drawio; extension
 property of component زي <Navbar.Img /> كمبوننت باخد منه بروبيرتي زي كزمبوننت اصغر ينتمي للكبير
 State Management 
     global state نعملها عشان كل الكمبوننت تبعتلها او تاخد منها داتا بدل ما ارفع الداتا لكمبوننت اب من طرقها
-    1- Lifting up & Drilling props طريقة deprecated
-    2- Context api 
+  1- Lifting up & Drilling props طريقة deprecated
+  2- Context api 
         ممكن اخلي كل الكمبوننت يشوفوها او كمبوننت معينة
         export const productContext = createContext(defaultValue); نعمل ال context في الفايل بتاعه
         export default const productsProvider = ( props ) => {
@@ -111,26 +128,75 @@ State Management
 
         <Navbar.toggle /> ننده بيها الفانكشن اللي جوا كمبوننت الناف as property
 
-    3- Recoil liberary تعمل State Management
+  3- Recoil liberary تعمل State Management
         atom زي فايل ال context بالظبط لازم يكون فيه key unique و Providers بحط فيه الداتا اللي هباصيها
         useRecoilState تخليني استخدم ال atom في الكمبوننت  
     
-    4- Redux
-        cycle is (Component or UI -> dispatch to Action -> Reducer -> store -> subscribe to Component or UI )
-        لو افترضنا اننا عايزين نسحب فلوس من البنك الفلوس متخزنة في الستور وعشان اسحب عملية السحب هي الاكشن وعشان تتفنذ ينفذها الريديوسر
-        - Store بخزن فيه الداتا اللي هعمل عليها العمليات اللي محتاجها بيبقي shared بين الكمبوننت كلها او اللي احددها
-        - Action الحاجة اللي عايز اعملها او event هو التعديل اللي عايز اعدله في الستور وعشان اعدل لازم استخدم الريديوسر
-        - Reducer فانكشن تاخد ال Action تنفذه يعدل في الستور
-                store.dispatch(action) تنفيذ عملية سحب الفلوس
-        - dispatch فانكشن تدي الريديوسر الامر انه ينفذ الاكشن
-        يحط الداتا في store عشان اكلمها ويغير او يحط فيها داتا اعمل يروح ل action وبعدها Reducer وبعدها store
-        - Subscribe عشان اجيب الداتا من الستور في الكمبوننت
-        - Component or UI عبارة عن اي عنصر عندي في الكمبوننت او الكمبوننت كله
-        const store = Redux.createStore(Reducer) عشان نعرف ستور 
-        const store = Redux.combineReducers(reducer1,reducer2) تخلي الستور ياخد اكتر من reducer
-        store.getState() تجيب الداتا من الستور تقول الحساب في فلوس كام
+  4- Redux
+    cycle is (Reducer -> store -> subscribe to Component or UI - Component or UI -> dispatch to Action -> )
+    لو افترضنا اننا عايزين نسحب فلوس من البنك الفلوس متخزنة في الستور وعشان اسحب عملية السحب هي الاكشن وعشان تتفنذ ينفذها الريديوسر
+    - Store بخزن فيه الداتا اللي هعمل عليها العمليات اللي محتاجها بيبقي shared بين الكمبوننت كلها او اللي احددها
+    - Action الحاجة اللي عايز اعملها او event هو التعديل اللي عايز اعدله في الستور وعشان اعدل لازم استخدم الريديوسر
+            بيكون ليه type و payload
+            - type نوع الاكشن غالبا بساويه ب string
+            - payload الحمولة زي العدد اللي بزود بيه الرقم كل ما اعوز ازود
+    - Reducer فانكشن تاخد ال Action و initial state تنفذه يعدل في الستور وترجع ال state الجديدة
+            الريديوسر اول حاجة بيتم انشاءها في الكود بيكون جوا الستور و initial state بتكون اوبكجت
+            لو في initial state اكتر من state عشان نبعتهم للاكشن نكتب ...state
+                if(action.type==="increase"){return{...state,value:state.value+1}}
+            store.dispatch(action) تنفيذ عملية سحب الفلوس
+    - dispatch فانكشن تدي الريديوسر الامر انه ينفذ الاكشن
+    يحط الداتا في store عشان اكلمها ويغير او يحط فيها داتا اعمل يروح ل action وبعدها Reducer وبعدها store
+    - Subscribe عشان اجيب الداتا من الستور في الكمبوننت
+    - Component or UI عبارة عن اي عنصر عندي في الكمبوننت او الكمبوننت كله
+    const store = Redux.createStore(Reducer) عشان نعرف ستور 
+    const store = Redux.combineReducers(reducer1,reducer2) تخلي الستور ياخد اكتر من reducer
+    store.getState() تجيب الداتا من الستور تقول الحساب في فلوس كام
 
-        Redux thunk تخليني اعمل فيتش للداتا من ال api عشان لو عملت فيتش من غيرها هيعمل ايررور عشان الاكشن و الريديوسر شغالين sync لازم middleware بينهم تخليهم يقبلوا داتا async
-            بتنزل من cdn عبارة عن middleware تخليني اقرا الداتا async قبل ما تروح من ال action لل reducer
-                عشان الاكشن بيكون synchronous
-        npm i react-redux & npm i redux
+    Redux thunk تخليني اعمل فيتش للداتا من ال api عشان لو عملت فيتش من غيرها هيعمل ايررور عشان الاكشن و الريديوسر شغالين sync لازم middleware بينهم تخليهم يقبلوا داتا async
+        بتنزل من cdn عبارة عن middleware تخليني اقرا الداتا async قبل ما تروح من ال action لل reducer
+            عشان الاكشن بيكون synchronous
+    npm i redux react-redux
+    npm i @reduxjs/toolkit react-redux
+
+    - Provider تاجة استخدمها في react-redux تخليني احط جواها الكمبوننت اللي عايز اخليه يعمل subscribe علي الستور
+    - useSelector hook بتعرضلي ال state بتاعت ال  reducer في الكمبوننت
+                const state= useSelector((state)=>state.value) ال value دي اسم ال state اللي عايز اجيب قيمتها من الكمبوننت
+    - Redux Toolkit سهلت شكل ال reducer في slice
+                const counterSlice= createSlice({
+                    name:count,                 بستخدمه عشان احدد الاكشن اللي هعمله counter.increase
+                    initialSate:myState,
+                    reducers:{
+                        increase: (state,action) =>{
+                            state.value += 1
+                        }, action في شكل فانكشن
+                        decrease: () =>{}
+                    }
+                    const store= createStore(counterSlice.reducer)                   })
+    - createStore بحط فيها reducer واحد
+        configureStore بحط فيها اكتر من reducer في شكل اوبجكت
+                    const store =configureStore({
+                        reducer:{counter: counterReducer, auth: authReducer} })
+    لو استخدمت useEffect عشان اول ما ابدا الكمبوننت اغير قيمة الكاونت تلقائي مثلا لام احط جواها useCallBack فانكشن بتقولي تحدث لما القيم تتغير بس 
+                لو محطتهاش يزود الكاونت infinite عشان بيشوف ان حصل تحديث reevaluate
+    
+    redux divtool extension
+
+    -extraReducer يشغل state اللي برا ال slice ال initial تعمل listen علي اكشن موجود عندي بديهولها لما يشتغل بنفذ اللي احدده فيه
+            زي اني لما اعمل logout وارجع اعمل login الاقي الكاونتر متصفر مش واخد اخر قيمة كنت مديهاله
+                بقوله لما تلاقي اكشن logout جالك في ال extraReducer صفر الكاونتر
+                import {logout} from './authSlice'
+                    const counterSlice= createSlice({
+                    name:count,                
+                    initialSate:myState,
+                    reducers:{
+                        increase: (state,action) =>{
+                            state.value += 1
+                        },
+                        decrease: () =>{}
+                    }
+                    extraReducers:{                 تعمل listen علي اكشن من برا ال slice اللي انا فيها
+                        [logout]: (state,action) => { بياخد الاكشن كبراميتر عشان لو فيه payload عايز اخلي الكاونتر بقيمة معينة بكتب state.value=action.payload
+                            state.value = 0
+                        }
+                    }})
