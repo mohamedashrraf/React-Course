@@ -67,8 +67,11 @@ v4
     3- useCallBack
 
     4- useRef
-        شبه getElementById بمسك بيها العنصر
-        اول ما السيستم يقوم يعمل focus او blur علي عنصر او انبوت معين 
+        1- شبه getElementById بمسك بيها العنصر بدون استخدام state بستخدم فيه ال dom
+        اول ما السيستم يقوم يعمل focus او blur علي انبوت معين عن طريق انه بيمسك العنصر ب ref ويطبق عليه فانكشن
+        اعملها import و اعرفها بمتغير const el=useRef(null);
+        استخدمها في تاجة العنصر في الاتشتيمال ب ref={el} 
+        2- مش بتتبع ال rerender بتاع ال useState عشان ميعملش infinite loop من ال render
 
 
 
@@ -93,6 +96,8 @@ Custom Hooks
         `https://pokeapi.co/api/v2/pokemon/${count}`
     );
 
+30 31 32??
+
 K57
 XSS ده حماية للداتا اللي بجيبها من api لما اجيبها بتظهر جوا تاجات زي span
     عشان اخلي الداتا تظهر عادي احط الريسبونس اللي راجع في <p dangerouslySetInnerHTML={{"_html":item.id}}></p>
@@ -104,6 +109,7 @@ debounce setTimeOut فترة بين كل ريكويست والتاني
 v8
 Drawio; extension 
 property of component زي <Navbar.Img /> كمبوننت باخد منه بروبيرتي زي كزمبوننت اصغر ينتمي للكبير
+
 State Management 
     global state نعملها عشان كل الكمبوننت تبعتلها او تاخد منها داتا بدل ما ارفع الداتا لكمبوننت اب من طرقها
   1- Lifting up & Drilling props طريقة deprecated
@@ -200,3 +206,7 @@ State Management
                             state.value = 0
                         }
                     }})
+
+
+5- React Query 
+    async State Management تهاندل ال caching و fetching و تحديث state server
